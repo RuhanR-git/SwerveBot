@@ -4,7 +4,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -118,8 +118,6 @@ public class SwerveSubsystem extends SubsystemBase
         return Math.IEEEremainder(yawDeg, 360);
     }
 
-
-
     public Rotation2d getRotation2d() 
     {
         return Rotation2d.fromDegrees(getHeading());
@@ -144,14 +142,27 @@ public class SwerveSubsystem extends SubsystemBase
         backRight.stop();
     }
 
-    public void setModuleStates(SwerveModuleState[] desiredStates) 
+    public void drive(ChassisSpeeds speeds) 
     {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        frontLeft.setDesiredState(desiredStates[0]);
-        frontRight.setDesiredState(desiredStates[1]);
-        backLeft.setDesiredState(desiredStates[2]);
-        backRight.setDesiredState(desiredStates[3]);
+    SwerveModuleState[] states =
+        DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        states,
+        DriveConstants.kPhysicalMaxSpeedMetersPerSecond
+    );
+
+    frontLeft.setDesiredState(states[0]);
+    frontRight.setDesiredState(states[1]);
+    backLeft.setDesiredState(states[2]);
+    backRight.setDesiredState(states[3]);
     }
+
+    public SwerveModuleState[] getModulePositions(SwerveModuleState[] states) 
+    {
+        return states;
+    }
+
 
     public void resetOdometry(Pose2d pose) 
     {

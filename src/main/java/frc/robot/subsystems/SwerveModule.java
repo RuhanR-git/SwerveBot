@@ -13,8 +13,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
-import edu.wpi.first.wpilibj.RobotController;
-
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -51,61 +49,43 @@ public class SwerveModule
 
     public SwerveModulePosition getPosition()
     {
-        // Spark MAX integrated encoder (motor rotations)
-        // NOTE: Depending on your REVLib version, getEncoder() may require an import.
-        double motorRotations = driveMotor.getEncoder().getPosition();
-
-        // Convert motor rotations -> wheel meters (uses gear ratio in ModuleConstants)
-        double meters = motorRotations * ModuleConstants.kDriveEncoderRot2Meter;
-
-        // Module angle from your analog absolute encoder (already calibrated with offset)
-        Rotation2d angle = new Rotation2d(getAbsoluteEncoderRad());
-
-        return new SwerveModulePosition(meters, angle);
+        return new SwerveModulePosition(moduleCoder.getPosition().getValueAsDouble(), new Rotation2d(getAbsoluteAngleRad()));
     }
 
-    public SwerveModuleState getState()
+    public SwerveModuleState getState() 
     {
-        // Spark MAX integrated encoder velocity (RPM in most REV APIs)
-        double motorRpm = driveMotor.getEncoder().getVelocity();
-
-        // Convert RPM -> m/s
-        double metersPerSecond = motorRpm * ModuleConstants.kDriveEncoderRPM2MeterPerSec;
-
-        Rotation2d angle = new Rotation2d(getAbsoluteEncoderRad());
-
-        return new SwerveModuleState(metersPerSecond, angle);
+        return new SwerveModuleState(moduleCoder.getVelocity().getValueAsDouble(), new Rotation2d(getAbsoluteAngleRad()));
     }
-
-    public double getAbsoluteEncoderRad() 
-    {
-        double angle = moduleCoder.getSupplyVoltage().getValueAsDouble() / RobotController.getVoltage5V();
-        angle *= 2.0 * Math.PI;
-        angle -= moduleCoderOffsetRad;
-        return angle * (moduleCoderReversed ? -1.0 : 1.0);
-    }
+    
 
     public void resetEncoders()
     {
-        // Zero drive distance
-        driveMotor.getEncoder().setPosition(0.0);
+        moduleCoder.setPosition(0.0); // Reset CANcoder position to 0
+    }
 
-        // We do NOT "zero" the absolute encoder; it is absolute by nature.
-        // If you later seed a relative steer encoder, that seeding happens here.
+    public double getAbsoluteAngleRad()
+    {
+        double rotations = moduleCoder.getPosition().getValueAsDouble();
+        return rotations * 2.0 * Math.PI;
     }
 
 
-    public void setDesiredState(SwerveModuleState state)
-    {
-        Rotation2d currentAngle = new Rotation2d(getAbsoluteEncoderRad());
-        state.optimize(currentAngle);
-
-        driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-
-        // turningPIDController wants radians
-        double turnOutput = turningPIDController.calculate(currentAngle.getRadians(), state.angle.getRadians());
+    public void setDesiredState(SwerveModuleState desiredState) {
+        if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
+    
+        desiredState.optimize(new Rotation2d(getAbsoluteAngleRad()));
+    
+        double turnOutput = turningPIDController.calculate(getAbsoluteAngleRad(), desiredState.angle.getRadians());
+    
+        driveMotor.set(
+            desiredState.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond
+        );
         steerMotor.set(turnOutput);
     }
+    
 
     public void stop() 
     {

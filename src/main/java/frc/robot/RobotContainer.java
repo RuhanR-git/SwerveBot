@@ -74,14 +74,14 @@ public class RobotContainer {
 
       // 4. Construct command to follow trajectory
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        trajectory,
-        swerveSubsystem::getPose,
-        DriveConstants.kDriveKinematics,
-        xController,
-        yController,
-        thetaController,
-        swerveSubsystem::setModuleStates,
-        swerveSubsystem);
+          trajectory,
+          swerveSubsystem::getPose,
+          DriveConstants.kDriveKinematics,
+          xController,
+          yController,
+          thetaController,
+          states -> swerveSubsystem.getModulePositions(states),
+          swerveSubsystem);
       
         // 5. Add some init and wrap-up, and return everything
         return new SequentialCommandGroup(

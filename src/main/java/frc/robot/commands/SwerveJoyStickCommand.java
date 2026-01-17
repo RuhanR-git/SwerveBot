@@ -3,9 +3,8 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -64,21 +63,21 @@ public class SwerveJoyStickCommand extends Command
                 * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
         // 4. Construct desired chassis speeds
-        ChassisSpeeds chassisSpeeds;
-        if (fieldOrientedFunction.get()) {
-            // Relative to field
-            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                    xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
-        } else {
-            // Relative to robot
-            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+            xSpeed * xSpeed,
+            ySpeed * ySpeed,
+            turningSpeed * DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond,
+            new Rotation2d(swerveSubsystem.getHeading())
+        );
+        if (!fieldOrientedFunction.get()) {
+            speeds = new ChassisSpeeds(
+                xSpeed,
+                ySpeed,
+                turningSpeed
+            );
         }
-
-        // 5. Convert chassis speeds to individual module states
-        SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-
         // 6. Output each module states to wheels
-        swerveSubsystem.setModuleStates(moduleStates);
+        swerveSubsystem.drive(speeds);
     }
     // Called once the command ends or is interrupted.
     @Override

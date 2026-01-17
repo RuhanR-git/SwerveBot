@@ -42,15 +42,15 @@ public final class Constants
         
         public static final int kDriverControllerPort = 0;
 
-        public static final int kFrontLeftDriveMotorPort = 2;
         public static final int kFrontLeftSteerMotorPort = 1;
-        public static final int kBackRightDriveMotorPort = 4;
+        public static final int kFrontLeftDriveMotorPort = 2;
         public static final int kBackRightSteerMotorPort = 3;
-        public static final int kFrontRightDriveMotorPort = 6;
+        public static final int kBackRightDriveMotorPort = 4;
         public static final int kFrontRightSteerMotorPort = 5;
-        public static final int kBackLeftDriveMotorPort = 8;
+        public static final int kFrontRightDriveMotorPort = 6;
         public static final int kBackLeftSteerMotorPort = 7;
-
+        public static final int kBackLeftDriveMotorPort = 8;
+        
         public static final boolean kFrontLeftDriveMotorReversed = false;
         public static final boolean kFrontLeftSteerMotorReversed = false;
         public static final boolean kFrontRightDriveMotorReversed = false;
