@@ -15,13 +15,13 @@ public final class Constants
         public static final double kWheelRadiusMeters = 0.0508;
         public static final double kWheelDiameterMeters = ModuleConstants.kWheelRadiusMeters * 2;
         public static final double kWheelCircumferenceMeters = ModuleConstants.kWheelDiameterMeters * Math.PI;
-        public static final double kDriveMotorGearRatio = 1 / 6.75;
-        public static final double kSteerMotorGearRatio = 1 / 6.75;
+        public static final double kDriveMotorGearRatio = 1.0 / 6.75;
+        public static final double kSteerMotorGearRatio = 1.0 / 6.75;
         public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
         public static final double kSteerEncoderRot2Rad = kSteerMotorGearRatio * 2 * Math.PI;
         public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
         public static final double kTurningEncoderRPM2RadPerSec = kSteerEncoderRot2Rad / 60;
-        public static final double kPTurning = 0.5;
+        public static final double kPTurning = 0.3;
     }
     
     public static final double kPSteer = 0.5;
@@ -130,6 +130,6 @@ public final class Constants
         // Pick the one you actually want for field oriented toggle/hold.
         public static final int kDriverFieldOrientedButtonIdx = 1;
     
-        public static final double kDeadband = 0.25;
+        public static final double kDeadband = 0.5;
     }    
 }
