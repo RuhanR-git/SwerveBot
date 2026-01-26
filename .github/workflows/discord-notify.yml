@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send message to Discord
-        uses: Ilshidur/action-discord@v2
+        uses: Ilshidur/action-discord@<FULL_40_CHAR_SHA>
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
