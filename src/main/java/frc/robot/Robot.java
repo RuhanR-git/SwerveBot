@@ -48,7 +48,8 @@ public class Robot extends TimedRobot {
      * SmartDashboard integrated updating.
      */
     @Override
-    public void robotPeriodic() {
+    public void robotPeriodic() 
+    {
         // Runs the Scheduler. This is responsible for polling buttons, adding
         // newly-scheduled
         // commands, running already-scheduled commands, removing finished or
@@ -61,12 +62,14 @@ public class Robot extends TimedRobot {
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
-    public void disabledInit() {
+    public void disabledInit() 
+    {
 
     }
 
     @Override
-    public void disabledPeriodic() {
+    public void disabledPeriodic() 
+    {
 
     }
 
@@ -75,11 +78,13 @@ public class Robot extends TimedRobot {
      * {@link RobotContainer} class.
      */
     @Override
-    public void autonomousInit() {
+    public void autonomousInit() 
+    {
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
-        if (m_autonomousCommand != null) {
+        if (m_autonomousCommand != null) 
+        {
             m_autonomousCommand.schedule();
         }
     }
@@ -106,7 +111,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() 
     {
-        
+
     }
 
     @Override
