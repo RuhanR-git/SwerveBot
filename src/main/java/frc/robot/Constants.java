@@ -116,12 +116,6 @@ public final class Constants
         public static final int kBackLeftCANcoderId   = 3;
         public static final int kBackRightCANcoderId  = 4;
 
-        // These look like older/alternate encoder ports (not used in the swerve files you sent).
-        public static final int kFrontLeftDriveModuleCoderPort = 1;
-        public static final int kBackLeftDriveModuleCoderPort = 2;
-        public static final int kFrontRightDriveModuleCoderPort = 3;
-        public static final int kBackRightDriveModuleCoderPort = 4;
-
         // CAN ID for the gyro (Pigeon2).
         public static final int kPigeonId = 69;
 
